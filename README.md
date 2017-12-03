@@ -45,6 +45,15 @@ exports.queue = {
 ```js
 // {app_root}/config/config.default.js
 exports.queue = {
+     register: true, //是否注册事件（queue和主工程分开，可以两个docker运行）
+     listen: 7002,  //kue默认提供了一个[UI](https://github.com/Automattic/kue/blob/master/Readme.md#user-interface)
+     prefix: 'kuequeue',
+     redis: {
+        port: 6379, // Redis port
+        host: 'myredis', // Redis host
+        password: null,
+        db: 2,
+     },
 };
 ```
 
@@ -53,6 +62,95 @@ see [config/config.default.js](config/config.default.js) for more detail.
 ## Example
 
 <!-- example here -->
+这里的task可以使用两种形式
+1. 导出一个函数
+```js
+'use strict';
+
+module.exports = {
+
+  /**
+     * 执行queue中的任务
+     * @param {Object} ctx egg中的ctx，方便访问egg中的资源
+     * @param {Object} job kue中的job
+     * @param {Object} kueCtx kue中的ctx，可以控制任务的暂停，重启
+     * @param {function}  done 任务完成成功done()，失败done(err)
+     * @return {void}
+     */
+  async task(ctx, job, kueCtx, done) {
+    console.log(job);
+    done();
+  },
+
+  /**
+     *添加到queue中的标志
+     *可选，默认action为js文件名 send_sms.js => sendSms
+     * @return {string} action
+     */
+  get action() {
+    return 'send_sms';
+  },
+
+  /**
+     *任务的并发量
+     *可选，默认为1
+     * @return {number} concurrency
+     */
+  get concurrency() {
+    return 2;
+  },
+};
+
+```
+
+2. 导出一个class
+```js
+'use strict';
+
+
+const Subscription = require('egg').Subscription;
+
+class SmsSendSubscription extends Subscription {
+
+  /**
+     * 执行queue中的任务，this 为egg的ctx
+     * @param {Object} job kue中的job
+     * @param {Object} kueCtx kue中的ctx，可以控制任务的暂停，重启
+     * @param {function}  done 任务完成成功done()，失败done(err)
+     * @return {void}
+     */
+  async subscribe(job, kueCtx, done) {
+    setTimeout(() => {
+      done();
+    }, 5000);
+  }
+
+
+  /**
+     *添加到queue中的标志
+     *可选，默认action为js文件名 send_sms.js => sendSms
+     * @return {string} action
+     */
+  static get action() {
+    return 'send_sms3';
+  }
+
+  /**
+     *任务的并发量
+     *可选，默认为1
+     * @return {number} concurrency
+     */
+  get concurrency() {
+    return 2;
+  }
+
+}
+
+module.exports = SmsSendSubscription;
+
+```
+
+
 
 ## Questions & Suggestions
 
