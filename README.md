@@ -62,9 +62,11 @@ see [config/config.default.js](config/config.default.js) for more detail.
 ## Example
 
 <!-- example here -->
-这里的task可以使用两种形式
+###这里注册task可以使用两种形式
 1. 导出一个函数
 ```js
+// app/queue/send_sms.js
+
 'use strict';
 
 module.exports = {
@@ -105,8 +107,8 @@ module.exports = {
 
 2. 导出一个class
 ```js
+// app/queue/send_sms3.js
 'use strict';
-
 
 const Subscription = require('egg').Subscription;
 
@@ -149,8 +151,15 @@ class SmsSendSubscription extends Subscription {
 module.exports = SmsSendSubscription;
 
 ```
+### 发布task
+```js
+    const { queue } = ctx.app;
 
-
+    const res = await queue.create('send_sms3', {
+      phone: '139********',
+    }).save();
+```
+`queue`即为`kue`中的`queue`
 
 ## Questions & Suggestions
 
