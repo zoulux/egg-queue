@@ -62,7 +62,7 @@ see [config/config.default.js](config/config.default.js) for more detail.
 ## Example
 
 <!-- example here -->
-###这里注册task可以使用两种形式
+### 这里注册task可以使用两种形式
 1. 导出一个函数
 ```js
 // app/queue/send_sms.js
