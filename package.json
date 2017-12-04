@@ -1,6 +1,6 @@
 {
   "name": "egg-queue",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "kue plugin for egg",
   "eggPlugin": {
     "name": "queue"
@@ -14,8 +14,7 @@
   ],
   "dependencies": {
     "is-type-of": "^1.2.0",
-    "kue": "^0.11.6",
-    "safe-timers": "^1.1.0"
+    "kue": "^0.11.6"
   },
   "devDependencies": {
     "autod": "^3.0.0",
@@ -43,7 +42,8 @@
   "files": [
     "app.js",
     "agent.js",
-    "config"
+    "config",
+    "lib"
   ],
   "ci": {
     "version": "8, 9"
